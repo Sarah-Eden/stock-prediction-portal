@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "./AuthProvider";
+import { AuthContext } from "../AuthProvider";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -27,7 +27,7 @@ const Login = () => {
       localStorage.setItem("refreshToken", response.data.refresh);
       console.log("Login successful");
       setIsLoggedIn(true);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Invalid credentials");
       setError("Invalid credentials");
