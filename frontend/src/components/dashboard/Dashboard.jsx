@@ -1,19 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axiosInstance from "../../axiosInstance";
 
 const Dashboard = () => {
+  const [ticker, setTicker] = useState("");
+
   useEffect(() => {
     const fetchProtectedData = async () => {
       try {
         const response = await axiosInstance.get("/protected-view");
-        console.log("Success: ", response.data);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
     fetchProtectedData();
   }, []);
-  return <div className="text-light container">Dashboard</div>;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axiosInstance.post("/predict/", {
+        ticker: ticker,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error("There was an error making the API request", error);
+    }
+  };
+
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-md-6 mx-auto">
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter stock ticker"
+              onChange={(e) => setTicker(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn btn-info mt-3">
+              Predict
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;
